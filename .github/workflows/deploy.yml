@@ -1,0 +1,12 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: BijanProgrammerWebsites/hub/.github/workflows/deploy-nestjs.yml@master
+    with:
+      process-name: api-tmdb
+    secrets: inherit
