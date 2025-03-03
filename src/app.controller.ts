@@ -1,12 +1,19 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('*')
+  async proxy(
+    @Param('path') path: string[],
+    @Query() query: Record<string, string>,
+  ): Promise<any> {
+    const endpoint = path.join('/');
+    const searchParams = new URLSearchParams(query).toString();
+
+    return this.appService.proxy(endpoint, searchParams);
   }
 }
