@@ -1,6 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
+import * as cookieParser from 'cookie-parser';
+
 import 'reflect-metadata';
 
 import { AppModule } from './app.module';
@@ -11,6 +13,8 @@ async function bootstrap() {
   app.setGlobalPrefix('tmdb');
 
   app.enableCors();
+
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({

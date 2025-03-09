@@ -102,6 +102,13 @@ export class AuthService {
     };
   }
 
+  public auth(): ResponseDto {
+    return {
+      statusCode: 200,
+      message: 'Authenticated.',
+    };
+  }
+
   public async refresh(
     userId: string,
     refreshToken: string,
@@ -208,7 +215,7 @@ export class AuthService {
       secure: this.configService.get<string>('NODE_ENV') === 'production',
       expires: refreshTokenExpiration,
       sameSite: 'strict',
-      path: '/auth/refresh',
+      path: '/tmdb/auth/refresh',
     });
   }
 }

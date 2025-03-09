@@ -56,6 +56,12 @@ export class AuthController {
     return this.authService.signOut(dto, res);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('auth')
+  public auth() {
+    return this.authService.auth();
+  }
+
   @Get('refresh')
   public refreshTokens(
     @Req() req: Request,
