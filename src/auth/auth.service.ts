@@ -19,7 +19,6 @@ import { User } from '../entities/user.entity';
 import { ResponseDto } from './dto/response.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
-import { SignOutDto } from './dto/sign-out.dto';
 
 import { JwtPayloadType } from './types/jwt-payload.type';
 
@@ -89,10 +88,8 @@ export class AuthService {
     };
   }
 
-  public async signOut(dto: SignOutDto, res: Response): Promise<ResponseDto> {
-    const { id } = dto;
-
-    await this.userRepository.update(id, { refreshToken: null });
+  public async signOut(userId: string, res: Response): Promise<ResponseDto> {
+    await this.userRepository.update(userId, { refreshToken: null });
 
     this.clearCookies(res);
 

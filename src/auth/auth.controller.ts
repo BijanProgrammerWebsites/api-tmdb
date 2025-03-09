@@ -13,9 +13,12 @@ import { JwtService } from '@nestjs/jwt';
 
 import { Request, Response } from 'express';
 
+import { User } from '../entities/user.entity';
+
+import { GetUser } from './decorators/get-user.decorator';
+
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
-import { SignOutDto } from './dto/sign-out.dto';
 
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -50,10 +53,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('sign-out')
   public signOut(
-    @Body() dto: SignOutDto,
+    @GetUser() user: User,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return this.authService.signOut(dto, res);
+    return this.authService.signOut(user.id, res);
   }
 
   @UseGuards(JwtAuthGuard)
