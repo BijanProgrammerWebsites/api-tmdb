@@ -8,18 +8,20 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 import { Request, Response } from 'express';
 
-import { AuthService } from './auth.service';
-
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { SignOutDto } from './dto/sign-out.dto';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+
 import { JwtPayloadType } from './types/jwt-payload.type';
+
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
