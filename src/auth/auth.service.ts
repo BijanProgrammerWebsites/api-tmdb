@@ -12,7 +12,7 @@ import { Response } from 'express';
 
 import { Repository } from 'typeorm';
 
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 import { User } from '../entities/user.entity';
 
@@ -32,10 +32,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  public async signUp(
-    dto: SignUpDto,
-    res: Response,
-  ): Promise<ResponseDto<null>> {
+  public async signUp(dto: SignUpDto, res: Response): Promise<ResponseDto> {
     const { username, password } = dto;
 
     const foundUser = await this.userRepository.findOne({
@@ -60,19 +57,15 @@ export class AuthService {
       await this.generateTokensAndSetCookies(user, res);
 
       return {
-        hasError: false,
+        statusCode: 200,
         message: 'Signed up successfully.',
-        result: null,
       };
     } catch {
       throw new InternalServerErrorException();
     }
   }
 
-  public async signIn(
-    dto: SignInDto,
-    res: Response,
-  ): Promise<ResponseDto<null>> {
+  public async signIn(dto: SignInDto, res: Response): Promise<ResponseDto> {
     const { username, password } = dto;
 
     const foundUser = await this.userRepository.findOne({
@@ -91,16 +84,12 @@ export class AuthService {
     await this.generateTokensAndSetCookies(foundUser, res);
 
     return {
-      hasError: false,
+      statusCode: 200,
       message: 'Signed in successfully.',
-      result: null,
     };
   }
 
-  public async signOut(
-    dto: SignOutDto,
-    res: Response,
-  ): Promise<ResponseDto<null>> {
+  public async signOut(dto: SignOutDto, res: Response): Promise<ResponseDto> {
     const { id } = dto;
 
     await this.userRepository.update(id, { refreshToken: null });
@@ -108,9 +97,8 @@ export class AuthService {
     this.clearCookies(res);
 
     return {
-      hasError: false,
+      statusCode: 200,
       message: 'Signed out successfully.',
-      result: null,
     };
   }
 
@@ -118,7 +106,7 @@ export class AuthService {
     userId: string,
     refreshToken: string,
     res: Response,
-  ): Promise<ResponseDto<null>> {
+  ): Promise<ResponseDto> {
     const foundUser = await this.userRepository.findOne({
       where: { id: userId },
     });
@@ -138,7 +126,7 @@ export class AuthService {
 
     await this.generateTokensAndSetCookies(foundUser, res);
 
-    return { hasError: false, message: 'Tokens refreshed.', result: null };
+    return { statusCode: 200, message: 'Tokens refreshed.' };
   }
 
   public clearCookies(res: Response): void {
