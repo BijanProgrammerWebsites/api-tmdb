@@ -16,7 +16,6 @@ import bcrypt from 'bcrypt';
 
 import { User } from '../entities/user.entity';
 
-import { RefreshDto } from './dto/refresh.dto';
 import { ResponseDto } from './dto/response.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
