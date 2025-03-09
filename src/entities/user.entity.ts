@@ -23,7 +23,7 @@ export class User {
   lastName: string | null;
 
   @Column('date', { nullable: true, default: null })
-  dob: boolean | null;
+  dob: Date | null;
 
   @Column('text', { nullable: true, default: null })
   @Exclude()
