@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { All, Controller, Param, Query } from '@nestjs/common';
 
 import { AppService } from './app.service';
 
@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('*')
+  @All()
   async proxy(
     @Param('path') path: string[],
     @Query() query: Record<string, string>,
