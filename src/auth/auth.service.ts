@@ -116,14 +116,12 @@ export class AuthService {
   }
 
   public async refresh(
-    dto: RefreshDto,
+    userId: string,
     refreshToken: string,
     res: Response,
   ): Promise<ResponseDto<null>> {
-    const { id } = dto;
-
     const foundUser = await this.userRepository.findOne({
-      where: { id },
+      where: { id: userId },
     });
 
     if (!foundUser || !foundUser.refreshToken) {
@@ -142,6 +140,11 @@ export class AuthService {
     await this.generateTokensAndSetCookies(foundUser, res);
 
     return { hasError: false, message: 'Tokens refreshed.', result: null };
+  }
+
+  public clearCookies(res: Response): void {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
   }
 
   private async generateTokensAndSetCookies(
@@ -220,10 +223,5 @@ export class AuthService {
       sameSite: 'strict',
       path: '/auth/refresh',
     });
-  }
-
-  private clearCookies(res: Response): void {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
   }
 }

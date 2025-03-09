@@ -1,3 +1,11 @@
-import { User } from '../../entities/user.entity';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export type SignInDto = Pick<User, 'username' | 'password'>;
+export class SignInDto {
+  @IsString()
+  @IsNotEmpty()
+  username: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}

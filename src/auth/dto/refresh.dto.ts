@@ -1,3 +1,6 @@
-import { User } from '../../entities/user.entity';
+import { IsUUID } from 'class-validator';
 
-export type RefreshDto = Pick<User, 'id'>;
+export class RefreshDto {
+  @IsUUID()
+  id: string;
+}

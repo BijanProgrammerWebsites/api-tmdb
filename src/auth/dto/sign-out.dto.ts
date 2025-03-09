@@ -1,3 +1,6 @@
-import { User } from '../../entities/user.entity';
+import { IsUUID } from 'class-validator';
 
-export type SignOutDto = Pick<User, 'id'>;
+export class SignOutDto {
+  @IsUUID()
+  id: string;
+}
