@@ -201,17 +201,17 @@ export class AuthService {
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      secure: this.configService.get<string>('NODE_ENV') === 'production',
+      secure: true,
       expires: accessTokenExpiration,
-      sameSite: 'strict',
+      sameSite: 'none',
       path: '/',
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: this.configService.get<string>('NODE_ENV') === 'production',
+      secure: true,
       expires: refreshTokenExpiration,
-      sameSite: 'strict',
+      sameSite: 'none',
       path: '/tmdb/auth/refresh',
     });
   }
