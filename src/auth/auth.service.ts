@@ -78,7 +78,7 @@ export class AuthService {
 
     const isPasswordValid = await bcrypt.compare(password, foundUser.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Password does not match.');
+      throw new UnauthorizedException('Password is wrong.');
     }
 
     await this.generateTokensAndSetCookies(foundUser, res);
