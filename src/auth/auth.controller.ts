@@ -66,7 +66,7 @@ export class AuthController {
   }
 
   @Get('refresh')
-  public refreshTokens(
+  public refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
