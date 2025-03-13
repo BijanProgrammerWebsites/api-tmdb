@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import * as cookieParser from 'cookie-parser';
@@ -25,6 +25,8 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       whitelist: true,
+      errorHttpStatusCode: HttpStatus.I_AM_A_TEAPOT,
+      forbidNonWhitelisted: true,
     }),
   );
 

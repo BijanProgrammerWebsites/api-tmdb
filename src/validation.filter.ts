@@ -1,22 +1,23 @@
 import {
   ArgumentsHost,
-  BadRequestException,
   Catch,
   ExceptionFilter,
+  HttpStatus,
+  ImATeapotException,
 } from '@nestjs/common';
 
 import { Response } from 'express';
 
-@Catch(BadRequestException)
+@Catch(ImATeapotException)
 export class ValidationExceptionFilter implements ExceptionFilter {
-  catch(exception: BadRequestException, host: ArgumentsHost) {
+  catch(exception: ImATeapotException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
     const validationErrors = exception.getResponse() as any;
 
-    if (!(validationErrors && Array.isArray(validationErrors.message))) {
+    if (!validationErrors) {
       response.status(status).json(exception.getResponse());
       return;
     }
@@ -35,8 +36,8 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       formattedErrors[field].push(error);
     });
 
-    response.status(status).json({
-      statusCode: status,
+    response.status(HttpStatus.BAD_REQUEST).json({
+      statusCode: HttpStatus.BAD_REQUEST,
       error: 'Validation Failed',
       message: 'One or more conditions are not met.',
       validationErrors: formattedErrors,
