@@ -131,7 +131,7 @@ export class AuthService {
     const accessToken = this.generateAccessToken(foundUser);
     this.setAccessTokenCookie(res, accessToken);
 
-    return { statusCode: 200, message: 'Tokens refreshed.' };
+    return { statusCode: 200, message: 'Access token refreshed.' };
   }
 
   public clearCookies(res: Response): void {
