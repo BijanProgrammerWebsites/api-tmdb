@@ -14,7 +14,7 @@ import { Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 
-import { User } from '../entities/user.entity';
+import { User } from '../user/user.entity';
 
 import { ResponseDto } from './dto/response.dto';
 import { SignUpDto } from './dto/sign-up.dto';
