@@ -99,7 +99,7 @@ export class AuthService {
     };
   }
 
-  public auth(): ResponseDto {
+  public valid(): ResponseDto {
     return {
       statusCode: 200,
       message: 'Authenticated.',

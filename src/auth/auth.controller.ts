@@ -60,9 +60,9 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('auth')
-  public auth() {
-    return this.authService.auth();
+  @Get('valid')
+  public valid() {
+    return this.authService.valid();
   }
 
   @Get('refresh')
