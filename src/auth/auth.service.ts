@@ -136,8 +136,17 @@ export class AuthService {
   }
 
   public clearCookies(res: Response): void {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
   }
 
   private async generateTokensAndSetCookies(
