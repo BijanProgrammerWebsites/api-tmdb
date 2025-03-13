@@ -14,9 +14,10 @@ import { Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 
+import { ResponseDto } from '../shared/dto/response.dto';
+
 import { User } from '../user/user.entity';
 
-import { ResponseDto } from './dto/response.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
 
