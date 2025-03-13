@@ -117,7 +117,7 @@ export class AuthService {
     });
 
     if (!foundUser || !foundUser.refreshToken) {
-      throw new UnauthorizedException('Invalid session.');
+      throw new UnauthorizedException('Refresh token is invalid.');
     }
 
     const isRefreshTokenValid = await bcrypt.compare(
@@ -126,7 +126,7 @@ export class AuthService {
     );
 
     if (!isRefreshTokenValid) {
-      throw new UnauthorizedException('Invalid session.');
+      throw new UnauthorizedException('Refresh token is invalid.');
     }
 
     const accessToken = this.generateAccessToken(foundUser);
