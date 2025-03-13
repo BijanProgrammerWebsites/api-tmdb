@@ -128,7 +128,8 @@ export class AuthService {
       throw new UnauthorizedException('Invalid session.');
     }
 
-    await this.generateTokensAndSetCookies(foundUser, res);
+    const accessToken = this.generateAccessToken(foundUser);
+    this.setAccessTokenCookie(res, accessToken);
 
     return { statusCode: 200, message: 'Tokens refreshed.' };
   }
@@ -183,34 +184,41 @@ export class AuthService {
     accessToken: string,
     refreshToken: string,
   ): void {
-    const accessTokenExpiration = new Date();
+    this.setAccessTokenCookie(res, accessToken);
+    this.setRefreshTokenCookie(res, refreshToken);
+  }
 
-    accessTokenExpiration.setSeconds(
-      accessTokenExpiration.getSeconds() +
+  private setAccessTokenCookie(res: Response, accessToken: string): void {
+    const expiration = new Date();
+
+    expiration.setSeconds(
+      expiration.getSeconds() +
         this.configService.get<number>('JWT_COOKIE_EXPIRATION_SECONDS')!,
-    );
-
-    const refreshTokenExpiration = new Date();
-
-    refreshTokenExpiration.setSeconds(
-      refreshTokenExpiration.getSeconds() +
-        this.configService.get<number>(
-          'JWT_REFRESH_COOKIE_EXPIRATION_SECONDS',
-        )!,
     );
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
-      expires: accessTokenExpiration,
+      expires: expiration,
       sameSite: 'none',
       path: '/',
     });
+  }
+
+  private setRefreshTokenCookie(res: Response, refreshToken: string): void {
+    const expiration = new Date();
+
+    expiration.setSeconds(
+      expiration.getSeconds() +
+        this.configService.get<number>(
+          'JWT_REFRESH_COOKIE_EXPIRATION_SECONDS',
+        )!,
+    );
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      expires: refreshTokenExpiration,
+      expires: expiration,
       sameSite: 'none',
       path: '/tmdb/auth/refresh',
     });
