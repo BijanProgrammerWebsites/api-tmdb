@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
+import * as bcrypt from 'bcrypt';
+
 import { ResponseDto } from '../shared/dto/response.dto';
 
 import { UpdateDto } from './dto/update.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 import { User } from './user.entity';
 
@@ -33,12 +36,39 @@ export class UserService {
     };
   }
 
-  public async update(dto: UpdateDto): Promise<ResponseDto> {
-    await this.userRepository.update({ username: dto.username }, dto);
+  public async update(user: User, dto: UpdateDto): Promise<ResponseDto> {
+    await this.userRepository.update({ id: user.id }, dto);
 
     return {
       statusCode: 200,
       message: 'User updated successfully.',
+    };
+  }
+
+  public async updatePassword(
+    user: User,
+    dto: UpdatePasswordDto,
+  ): Promise<ResponseDto> {
+    const isPasswordValid = await bcrypt.compare(
+      dto.currentPassword,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Current password is wrong.');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(dto.newPassword, salt);
+
+    await this.userRepository.update(
+      { id: user.id },
+      { password: hashedPassword },
+    );
+
+    return {
+      statusCode: 200,
+      message: 'Password updated successfully.',
     };
   }
 }

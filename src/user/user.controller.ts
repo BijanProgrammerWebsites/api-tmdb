@@ -4,6 +4,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 import { UpdateDto } from './dto/update.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -20,7 +21,13 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('update')
-  public update(@Body() dto: UpdateDto) {
-    return this.userService.update(dto);
+  public update(@GetUser() user: User, @Body() dto: UpdateDto) {
+    return this.userService.update(user, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('update-password')
+  public updatePassword(@GetUser() user: User, @Body() dto: UpdatePasswordDto) {
+    return this.userService.updatePassword(user, dto);
   }
 }
