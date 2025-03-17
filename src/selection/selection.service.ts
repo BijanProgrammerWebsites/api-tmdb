@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
+import { ResponseDto } from '../shared/dto/response.dto';
+
 import { User } from '../user/user.entity';
 
 import { CreateDto } from './dto/create.dto';
@@ -21,13 +23,19 @@ export class SelectionService {
     private selectionRepository: Repository<Selection>,
   ) {}
 
-  public async findAll(user: User): Promise<any> {
-    return await this.selectionRepository.find({
+  public async findAll(user: User): Promise<ResponseDto<any>> {
+    const selections = await this.selectionRepository.find({
       where: { user: { id: user.id } },
     });
+
+    return {
+      statusCode: 200,
+      message: 'Selections found successfully.',
+      result: selections,
+    };
   }
 
-  public async findOne(id: number): Promise<any> {
+  public async findOne(id: number): Promise<ResponseDto<any>> {
     const url = `${process.env.TMDB_BASE_URL}/4/list/${id}`;
 
     const response = await fetch(url, {
@@ -41,17 +49,21 @@ export class SelectionService {
 
     if ('results' in data && Array.isArray(data.results)) {
       return {
-        id: data.id,
-        name: data.name,
-        description: data.description,
-        results: data.results,
+        statusCode: 200,
+        message: 'Selection found successfully.',
+        result: {
+          id: data.id,
+          name: data.name,
+          description: data.description,
+          results: data.results,
+        },
       };
     }
 
     return data;
   }
 
-  public async create(user: User, dto: CreateDto): Promise<any> {
+  public async create(user: User, dto: CreateDto): Promise<ResponseDto<any>> {
     const url = `${process.env.TMDB_BASE_URL}/4/list`;
 
     const response = await fetch(url, {
@@ -87,10 +99,17 @@ export class SelectionService {
     foundUser!.selections = [...foundUser!.selections, selection];
     await this.userRepository.save(foundUser!);
 
-    return data;
+    return {
+      statusCode: 200,
+      message: 'Selection created successfully.',
+      result: data,
+    };
   }
 
-  public async update(selectionId: number, dto: UpdateDto): Promise<any> {
+  public async update(
+    selectionId: number,
+    dto: UpdateDto,
+  ): Promise<ResponseDto<any>> {
     const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}`;
 
     const response = await fetch(url, {
@@ -120,10 +139,14 @@ export class SelectionService {
       },
     );
 
-    return data;
+    return {
+      statusCode: 200,
+      message: 'Selection updated successfully.',
+      result: data,
+    };
   }
 
-  public async remove(selectionId: number): Promise<any> {
+  public async remove(selectionId: number): Promise<ResponseDto<any>> {
     const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}`;
 
     const response = await fetch(url, {
@@ -142,10 +165,14 @@ export class SelectionService {
 
     await this.selectionRepository.delete({ id: selectionId });
 
-    return data;
+    return {
+      statusCode: 200,
+      message: 'Selection removed successfully.',
+      result: data,
+    };
   }
 
-  public async clear(selectionId: number): Promise<any> {
+  public async clear(selectionId: number): Promise<ResponseDto<any>> {
     const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/clear`;
 
     const response = await fetch(url, {
@@ -155,10 +182,19 @@ export class SelectionService {
       },
     });
 
-    return await response.json();
+    const data = await response.json();
+
+    return {
+      statusCode: 200,
+      message: 'Selection cleared successfully.',
+      result: data,
+    };
   }
 
-  public async addMovie(selectionId: number, dto: AddMovieDto): Promise<any> {
+  public async addMovie(
+    selectionId: number,
+    dto: AddMovieDto,
+  ): Promise<ResponseDto<any>> {
     const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/items`;
 
     const response = await fetch(url, {
@@ -172,13 +208,19 @@ export class SelectionService {
       }),
     });
 
-    return await response.json();
+    const data = await response.json();
+
+    return {
+      statusCode: 200,
+      message: 'Movie added successfully.',
+      result: data,
+    };
   }
 
   public async removeMovie(
     selectionId: number,
     dto: RemoveMovieDto,
-  ): Promise<any> {
+  ): Promise<ResponseDto<any>> {
     const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/items`;
 
     const response = await fetch(url, {
@@ -192,6 +234,12 @@ export class SelectionService {
       }),
     });
 
-    return await response.json();
+    const data = await response.json();
+
+    return {
+      statusCode: 200,
+      message: 'Movie removed successfully.',
+      result: data,
+    };
   }
 }
