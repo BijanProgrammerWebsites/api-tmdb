@@ -134,7 +134,15 @@ export class SelectionService {
       },
     });
 
-    return await response.json();
+    const data = await response.json();
+
+    if (!data.success) {
+      return data;
+    }
+
+    await this.selectionRepository.delete({ id: selectionId });
+
+    return data;
   }
 
   public async clear(selectionId: number): Promise<any> {
