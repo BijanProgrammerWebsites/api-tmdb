@@ -37,8 +37,20 @@ export class SelectionController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  public update(@GetUser() user: User, @Body() dto: CreateDto) {
+  public create(@GetUser() user: User, @Body() dto: CreateDto) {
     return this.selectionService.create(user, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  public remove(@Param('id') selectionId: number) {
+    return this.selectionService.remove(selectionId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/clear')
+  public clear(@Param('id') selectionId: number) {
+    return this.selectionService.clear(selectionId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -54,11 +66,5 @@ export class SelectionController {
     @Body() dto: RemoveMovieDto,
   ) {
     return this.selectionService.removeMovie(selectionId, dto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get(':id/clear')
-  public clear(@Param('id') selectionId: number) {
-    return this.selectionService.clear(selectionId);
   }
 }

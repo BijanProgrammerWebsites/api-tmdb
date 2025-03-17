@@ -89,6 +89,33 @@ export class SelectionService {
     return data;
   }
 
+  public async remove(selectionId: number): Promise<any> {
+    const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}`;
+
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.TMDB_USER_TOKEN}`,
+      },
+    });
+
+    return await response.json();
+  }
+
+  public async clear(selectionId: number): Promise<any> {
+    const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/clear`;
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.TMDB_USER_TOKEN}`,
+      },
+    });
+
+    return await response.json();
+  }
+
   public async addMovie(selectionId: number, dto: AddMovieDto): Promise<any> {
     const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/items`;
 
@@ -121,19 +148,6 @@ export class SelectionService {
       body: JSON.stringify({
         items: [{ media_id: dto.movieId, media_type: 'movie' }],
       }),
-    });
-
-    return await response.json();
-  }
-
-  public async clear(selectionId: number): Promise<any> {
-    const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/clear`;
-
-    const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.TMDB_USER_TOKEN}`,
-      },
     });
 
     return await response.json();
