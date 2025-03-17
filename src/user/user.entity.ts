@@ -1,5 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { Exclude } from 'class-transformer';
+
+import { Selection } from '../selection/selection.entity';
 
 @Entity()
 export class User {
@@ -24,6 +27,9 @@ export class User {
 
   @Column('date', { nullable: true, default: null })
   dob: Date | null;
+
+  @OneToMany(() => Selection, (selection) => selection.user)
+  selections: Selection[];
 
   @Column('text', { nullable: true, default: null })
   @Exclude()

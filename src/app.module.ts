@@ -11,6 +11,9 @@ import { ProxyModule } from './proxy/proxy.module';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 
+import { SelectionModule } from './selection/selection.module';
+import { Selection } from './selection/selection.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -21,11 +24,12 @@ import { UserModule } from './user/user.module';
       username: process.env.DATABASE_USERNAME!,
       password: process.env.DATABASE_PASSWORD!,
       database: process.env.DATABASE_DATABASE!,
-      entities: [User],
+      entities: [User, Selection],
       synchronize: true,
     }),
     AuthModule,
     UserModule,
+    SelectionModule,
     ProxyModule,
   ],
   controllers: [AppController],

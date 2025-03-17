@@ -32,6 +32,7 @@ export class UserService {
         firstName: user.firstName,
         lastName: user.lastName,
         dob: user.dob,
+        selections: user.selections,
       },
     };
   }
