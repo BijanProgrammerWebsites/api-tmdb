@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 
 import { CreateDto } from './dto/create.dto';
+import { UpdateDto } from './dto/update.dto';
 import { AddMovieDto } from './dto/add-movie.dto';
 import { RemoveMovieDto } from './dto/remove-movie.dto';
 
@@ -85,6 +86,39 @@ export class SelectionService {
 
     foundUser!.selections = [...foundUser!.selections, selection];
     await this.userRepository.save(foundUser!);
+
+    return data;
+  }
+
+  public async update(selectionId: number, dto: UpdateDto): Promise<any> {
+    const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}`;
+
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.TMDB_USER_TOKEN}`,
+      },
+      body: JSON.stringify({
+        name: dto.name,
+        description: dto.description,
+        iso_639_1: 'en',
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      return data;
+    }
+
+    await this.selectionRepository.update(
+      { id: selectionId },
+      {
+        name: dto.name,
+        description: dto.description,
+      },
+    );
 
     return data;
   }
