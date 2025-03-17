@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 
 import { CreateDto } from './dto/create.dto';
+import { AddMovieDto } from './dto/add-movie.dto';
+import { RemoveMovieDto } from './dto/remove-movie.dto';
 
 import { Selection } from './selection.entity';
 
@@ -24,7 +26,7 @@ export class SelectionService {
     });
   }
 
-  public async findOne(user: User, id: number): Promise<any> {
+  public async findOne(id: number): Promise<any> {
     const url = `${process.env.TMDB_BASE_URL}/4/list/${id}`;
 
     const response = await fetch(url, {
@@ -85,5 +87,55 @@ export class SelectionService {
     await this.userRepository.save(foundUser!);
 
     return data;
+  }
+
+  public async addMovie(selectionId: number, dto: AddMovieDto): Promise<any> {
+    const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/items`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.TMDB_USER_TOKEN}`,
+      },
+      body: JSON.stringify({
+        items: [{ media_id: dto.movieId, media_type: 'movie' }],
+      }),
+    });
+
+    return await response.json();
+  }
+
+  public async removeMovie(
+    selectionId: number,
+    dto: RemoveMovieDto,
+  ): Promise<any> {
+    const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/items`;
+
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.TMDB_USER_TOKEN}`,
+      },
+      body: JSON.stringify({
+        items: [{ media_id: dto.movieId, media_type: 'movie' }],
+      }),
+    });
+
+    return await response.json();
+  }
+
+  public async clear(selectionId: number): Promise<any> {
+    const url = `${process.env.TMDB_BASE_URL}/4/list/${selectionId}/clear`;
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.TMDB_USER_TOKEN}`,
+      },
+    });
+
+    return await response.json();
   }
 }
