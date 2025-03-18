@@ -47,6 +47,14 @@ export class SelectionService {
 
     const data = await response.json();
 
+    if (!data.success) {
+      return {
+        statusCode: data.status_code,
+        message: data.errors[0],
+        error: data.status_message,
+      };
+    }
+
     if ('results' in data && Array.isArray(data.results)) {
       return {
         statusCode: 200,
@@ -60,7 +68,11 @@ export class SelectionService {
       };
     }
 
-    return data;
+    return {
+      statusCode: 400,
+      message: 'Unknown error occurred.',
+      error: 'Bad Request',
+    };
   }
 
   public async create(user: User, dto: CreateDto): Promise<ResponseDto<any>> {
@@ -82,7 +94,11 @@ export class SelectionService {
     const data = await response.json();
 
     if (!data.success) {
-      return data;
+      return {
+        statusCode: data.status_code,
+        message: data.errors[0],
+        error: data.status_message,
+      };
     }
 
     const selection = await this.selectionRepository.save({
@@ -128,7 +144,11 @@ export class SelectionService {
     const data = await response.json();
 
     if (!data.success) {
-      return data;
+      return {
+        statusCode: data.status_code,
+        message: data.errors[0],
+        error: data.status_message,
+      };
     }
 
     await this.selectionRepository.update(
@@ -160,7 +180,11 @@ export class SelectionService {
     const data = await response.json();
 
     if (!data.success) {
-      return data;
+      return {
+        statusCode: data.status_code,
+        message: data.errors[0],
+        error: data.status_message,
+      };
     }
 
     await this.selectionRepository.delete({ id: selectionId });
@@ -183,6 +207,14 @@ export class SelectionService {
     });
 
     const data = await response.json();
+
+    if (!data.success) {
+      return {
+        statusCode: data.status_code,
+        message: data.errors[0],
+        error: data.status_message,
+      };
+    }
 
     return {
       statusCode: 200,
@@ -210,6 +242,14 @@ export class SelectionService {
 
     const data = await response.json();
 
+    if (!data.success) {
+      return {
+        statusCode: data.status_code,
+        message: data.errors[0],
+        error: data.status_message,
+      };
+    }
+
     return {
       statusCode: 200,
       message: 'Movie added successfully.',
@@ -235,6 +275,14 @@ export class SelectionService {
     });
 
     const data = await response.json();
+
+    if (!data.success) {
+      return {
+        statusCode: data.status_code,
+        message: data.errors[0],
+        error: data.status_message,
+      };
+    }
 
     return {
       statusCode: 200,
