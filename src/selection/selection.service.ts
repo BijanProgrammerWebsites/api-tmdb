@@ -47,14 +47,6 @@ export class SelectionService {
 
     const data = await response.json();
 
-    if (!data.success) {
-      return {
-        statusCode: data.status_code,
-        message: data.errors[0],
-        error: data.status_message,
-      };
-    }
-
     if ('results' in data && Array.isArray(data.results)) {
       return {
         statusCode: 200,
@@ -63,15 +55,15 @@ export class SelectionService {
           id: data.id,
           name: data.name,
           description: data.description,
-          results: data.results,
+          movies: data.results,
         },
       };
     }
 
     return {
-      statusCode: 400,
-      message: 'Unknown error occurred.',
-      error: 'Bad Request',
+      statusCode: data.status_code,
+      message: data.errors?.[0],
+      error: data.status_message,
     };
   }
 
@@ -96,7 +88,7 @@ export class SelectionService {
     if (!data.success) {
       return {
         statusCode: data.status_code,
-        message: data.errors[0],
+        message: data.errors?.[0],
         error: data.status_message,
       };
     }
@@ -146,7 +138,7 @@ export class SelectionService {
     if (!data.success) {
       return {
         statusCode: data.status_code,
-        message: data.errors[0],
+        message: data.errors?.[0],
         error: data.status_message,
       };
     }
@@ -182,7 +174,7 @@ export class SelectionService {
     if (!data.success) {
       return {
         statusCode: data.status_code,
-        message: data.errors[0],
+        message: data.errors?.[0],
         error: data.status_message,
       };
     }
@@ -211,7 +203,7 @@ export class SelectionService {
     if (!data.success) {
       return {
         statusCode: data.status_code,
-        message: data.errors[0],
+        message: data.errors?.[0],
         error: data.status_message,
       };
     }
@@ -245,7 +237,7 @@ export class SelectionService {
     if (!data.success) {
       return {
         statusCode: data.status_code,
-        message: data.errors[0],
+        message: data.errors?.[0],
         error: data.status_message,
       };
     }
@@ -279,7 +271,7 @@ export class SelectionService {
     if (!data.success) {
       return {
         statusCode: data.status_code,
-        message: data.errors[0],
+        message: data.errors?.[0],
         error: data.status_message,
       };
     }
